@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vocabulary Learning Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        .word {
+            font-size: 2em;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .score {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #2ecc71;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Vocabulary Learning Game</h1>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="score" id="score">Words Learned: 0/0</div>
+        <div class="word" id="currentWord"></div>
+        <button onclick="speakWord()">Speak Word</button>
+        <button onclick="nextWord()">Next Word</button>
+    </div>
+
+    <script>
+        const words = [
+            "adventure", "beautiful", "celebrate", "different", "elephant",
+            "favorite", "grateful", "happiness", "important", "journey",
+            "knowledge", "language", "mountain", "necessary", "opposite",
+            "peaceful", "question", "remember", "separate", "together",
+            "umbrella", "vacation", "weather", "yesterday", "amazing",
+            "butterfly", "calendar", "dinosaur", "exercise", "festival",
+            "garden", "hospital", "imagine", "jungle", "kitchen",
+            "library", "medicine", "notebook", "octopus", "penguin",
+            "rainbow", "sandwich", "telescope", "universe", "vegetable",
+            "whisper", "xylophone", "yogurt", "zebra", "airplane",
+            "birthday", "chocolate", "dolphin", "elephant", "firefly",
+            "giraffe", "hamster", "island", "kangaroo", "lighthouse",
+            "monkey", "necklace", "orchestra", "paradise", "quarter",
+            "raccoon", "scissors", "treasure", "umbrella", "volcano",
+            "waterfall", "bicycle", "carousel", "dragonfly", "elephant"
+        ];
+
+        let currentIndex = 0;
+        let learnedWords = 0;
+        let shuffledWords = [];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            shuffledWords = shuffleArray([...words]);
+            currentIndex = 0;
+            learnedWords = 0;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('currentWord').textContent = shuffledWords[currentIndex];
+            document.getElementById('score').textContent = `Words Learned: ${learnedWords}/${shuffledWords.length}`;
+            const progress = (currentIndex / shuffledWords.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function speakWord() {
+            const utterance = new SpeechSynthesisUtterance(shuffledWords[currentIndex]);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function nextWord() {
+            learnedWords++;
+            currentIndex++;
+            if (currentIndex >= shuffledWords.length) {
+                alert('Congratulations! You\'ve completed all words!');
+                initGame();
+            } else {
+                updateDisplay();
+            }
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
