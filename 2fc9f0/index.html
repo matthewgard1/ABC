@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flappy Eagle</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #87CEEB;
+        }
+        #game {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background: #87CEEB;
+            overflow: hidden;
+        }
+        #eagle {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            transform-origin: center;
+        }
+        .pipe {
+            position: absolute;
+            width: 60px;
+            background: #2ecc71;
+        }
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            font-family: Arial;
+            color: white;
+            z-index: 1;
+        }
+        #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-family: Arial;
+            color: white;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <div id="score">0</div>
+        <div id="gameOver">
+            Game Over!<br>
+            Click to restart
+        </div>
+        <svg id="eagle" viewBox="0 0 100 100">
+            <path d="M50,20 C60,20 70,25 75,35 L90,25 L85,40 C85,55 70,70 50,70 C30,70 15,55 15,40 L10,25 L25,35 C30,25 40,20 50,20" fill="#8B4513"/>
+            <circle cx="45" cy="35" r="3" fill="white"/>
+            <circle cx="45" cy="35" r="1.5" fill="black"/>
+            <path d="M40,45 Q50,50 60,45" fill="none" stroke="#000" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <script>
+        const game = document.getElementById('game');
+        const eagle = document.getElementById('eagle');
+        const scoreElement = document.getElementById('score');
+        const gameOverElement = document.getElementById('gameOver');
+
+        let eagleY = 300;
+        let velocity = 0;
+        let score = 0;
+        let pipes = [];
+        let gameActive = true;
+        const gravity = 0.5;
+        const jump = -10;
+        const pipeGap = 150;
+
+        function createPipe() {
+            const pipeHeight = Math.random() * (game.clientHeight - pipeGap - 100) + 50;
+            
+            const topPipe = document.createElement('div');
+            topPipe.className = 'pipe';
+            topPipe.style.height = pipeHeight + 'px';
+            topPipe.style.top = '0';
+            topPipe.style.right = '-60px';
+            
+            const bottomPipe = document.createElement('div');
+            bottomPipe.className = 'pipe';
+            bottomPipe.style.height = (game.clientHeight - pipeHeight - pipeGap) + 'px';
+            bottomPipe.style.bottom = '0';
+            bottomPipe.style.right = '-60px';
+            
+            game.appendChild(topPipe);
+            game.appendChild(bottomPipe);
+            
+            pipes.push({
+                top: topPipe,
+                bottom: bottomPipe,
+                x: game.clientWidth,
+                counted: false
+            });
+        }
+
+        function updateGame() {
+            if (!gameActive) return;
+
+            velocity += gravity;
+            eagleY += velocity;
+            eagle.style.top = eagleY + 'px';
+            eagle.style.transform = `rotate(${velocity * 3}deg)`;
+
+            pipes.forEach(pipe => {
+                pipe.x -= 2;
+                pipe.top.style.right = (game.clientWidth - pipe.x) + 'px';
+                pipe.bottom.style.right = (game.clientWidth - pipe.x) + 'px';
+
+                if (pipe.x < -60) {
+                    game.removeChild(pipe.top);
+                    game.removeChild(pipe.bottom);
+                    pipes.shift();
+                }
+
+                if (pipe.x < eagle.offsetLeft + eagle.offsetWidth && 
+                    pipe.x + 60 > eagle.offsetLeft) {
+                    if (eagleY < pipe.top.offsetHeight ||
+                        eagleY + eagle.offsetHeight > pipe.top.offsetHeight + pipeGap) {
+                        gameOver();
+                    }
+                }
+
+                if (!pipe.counted && pipe.x < eagle.offsetLeft) {
+                    score++;
+                    scoreElement.textContent = score;
+                    pipe.counted = true;
+                }
+            });
+
+            if (eagleY < 0 || eagleY > game.clientHeight - eagle.offsetHeight) {
+                gameOver();
+            }
+
+            if (pipes.length === 0 || pipes[pipes.length - 1].x < game.clientWidth - 300) {
+                createPipe();
+            }
+
+            requestAnimationFrame(updateGame);
+        }
+
+        function gameOver() {
+            gameActive = false;
+            gameOverElement.style.display = 'block';
+        }
+
+        function startGame() {
+            eagleY = 300;
+            velocity = 0;
+            score = 0;
+            scoreElement.textContent = '0';
+            gameOverElement.style.display = 'none';
+            pipes.forEach(pipe => {
+                game.removeChild(pipe.top);
+                game.removeChild(pipe.bottom);
+            });
+            pipes = [];
+            gameActive = true;
+            updateGame();
+        }
+
+        document.addEventListener('click', () => {
+            if (gameActive) {
+                velocity = jump;
+            } else {
+                startGame();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                if (gameActive) {
+                    velocity = jump;
+                } else {
+                    startGame();
+                }
+            }
+        });
+
+        startGame();
+    </script>
+</body>
+</html>
