@@ -1,0 +1,51 @@
+Certainly! Below is a simple example of a single HTML file that includes HTML, CSS, and JavaScript. This file will create a basic web page with a styled button that displays an alert when clicked.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .button {
+            background-color: #008cba;
+            color: white;
+            border: none;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #005f5f;
+        }
+    </style>
+</head>
+<body>
+    <button class="button" onclick="showAlert()">Click Me</button>
+    
+    <script>
+        function showAlert() {
+            alert('Button was clicked!');
+        }
+    </script>
+</body>
+</html>
+```
+
+You can copy and paste this code into a text editor and save it as an HTML file (e.g., `index.html`). Then, open it in a web browser to see the page in action. The page consists of a button in the center, which displays an alert message when clicked.
