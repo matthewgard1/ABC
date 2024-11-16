@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Statistics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .stat-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .chart {
+            width: 100%;
+            height: 200px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Statistics Analyzer</h1>
+    <textarea id="textInput">To be, or not to be, that is the question:
+Whether 'tis nobler in the mind to suffer
+The slings and arrows of outrageous fortune,
+Or to take Arms against a Sea of troubles,
+And by opposing end them.</textarea>
+    <button onclick="analyzeText()">Analyze Text</button>
+    <div class="stats-container" id="stats"></div>
+
+    <script>
+        function analyzeText() {
+            const text = document.getElementById('textInput').value;
+            const words = text.toLowerCase().match(/\b\w+\b/g) || [];
+            const chars = text.toLowerCase().match(/[a-z]/g) || [];
+            
+            const wordFreq = {};
+            words.forEach(word => {
+                wordFreq[word] = (wordFreq[word] || 0) + 1;
+            });
+
+            const charFreq = {};
+            chars.forEach(char => {
+                charFreq[char] = (charFreq[char] || 0) + 1;
+            });
+
+            const stats = {
+                'Word Count': words.length,
+                'Character Count': text.length,
+                'Letter Count': chars.length,
+                'Average Word Length': (chars.length / words.length).toFixed(2),
+                'Sentence Count': (text.match(/[.!?]+/g) || []).length,
+                'Most Common Words': Object.entries(wordFreq)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5)
+                    .map(([word, count]) => `${word} (${count})`)
+                    .join(', '),
+                'Letter Frequency': Object.entries(charFreq)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5)
+                    .map(([char, count]) => `${char}: ${count}`)
+                    .join(', '),
+                'Unique Words': new Set(words).size,
+                'Lexical Density': ((new Set(words).size / words.length) * 100).toFixed(2) + '%'
+            };
+
+            const statsContainer = document.getElementById('stats');
+            statsContainer.innerHTML = '';
+
+            for (const [key, value] of Object.entries(stats)) {
+                const statBox = document.createElement('div');
+                statBox.className = 'stat-box';
+                statBox.innerHTML = `
+                    <h3>${key}</h3>
+                    <p>${value}</p>
+                `;
+                statsContainer.appendChild(statBox);
+            }
+
+            createLetterChart(charFreq);
+        }
+
+        function createLetterChart(charFreq) {
+            const chartBox = document.createElement('div');
+            chartBox.className = 'stat-box';
+            chartBox.style.gridColumn = '1 / -1';
+            chartBox.innerHTML = '<h3>Letter Distribution</h3><div class="chart"></div>';
+            document.getElementById('stats').appendChild(chartBox);
+
+            const chartData = Object.entries(charFreq)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+
+            const maxFreq = Math.max(...chartData.map(([_, count]) => count));
+            const chart = chartBox.querySelector('.chart');
+            
+            chart.style.display = 'flex';
+            chart.style.alignItems = 'flex-end';
+            chart.style.gap = '5px';
+
+            chartData.forEach(([letter, count]) => {
+                const bar = document.createElement('div');
+                const height = (count / maxFreq) * 100;
+                bar.style.width = `${90 / chartData.length}%`;
+                bar.style.height = `${height}%`;
+                bar.style.backgroundColor = '#4CAF50';
+                bar.style.position = 'relative';
+                bar.title = `${letter}: ${count}`;
+                
+                const label = document.createElement('div');
+                label.style.position = 'absolute';
+                label.style.bottom = '-25px';
+                label.style.width = '100%';
+                label.style.textAlign = 'center';
+                label.textContent = letter;
+                
+                bar.appendChild(label);
+                chart.appendChild(bar);
+            });
+        }
+
+        analyzeText();
+    </script>
+</body>
+</html>
