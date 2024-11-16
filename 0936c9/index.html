@@ -1,0 +1,57 @@
+<html>
+<head>
+    <title>Interactive Greeting Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Get a Personalized Greeting</h1>
+        <input type="text" id="nameInput" placeholder="Enter your name">
+        <button onclick="displayGreeting()">Submit</button>
+        <p id="greetingMessage"></p>
+    </div>
+    <script>
+        function displayGreeting() {
+            var name = document.getElementById('nameInput').value;
+            var message = '';
+            if (name) {
+                message = 'Hello, ' + name + '! Welcome!';
+            } else {
+                message = 'Please enter your name.';
+            }
+            document.getElementById('greetingMessage').innerText = message;
+        }
+    </script>
+</body>
+</html>
