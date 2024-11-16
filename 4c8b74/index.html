@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Converter Educational Tool</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c5282;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .converter-box {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input {
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .place-values {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .place-value {
+            background-color: #ebf4ff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: 60px;
+        }
+        .place-value span {
+            display: block;
+            font-size: 12px;
+            color: #4a5568;
+        }
+        .place-value.active {
+            background-color: #90cdf4;
+            color: #2c5282;
+        }
+        label {
+            font-weight: bold;
+            color: #4a5568;
+        }
+        .error {
+            color: #e53e3e;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Binary ⟷ Decimal Converter</h1>
+        <div class="converter-box">
+            <div class="input-group">
+                <label for="decimal">Decimal (Base 10)</label>
+                <input type="text" id="decimal" placeholder="Enter decimal number">
+                <div id="decimal-places" class="place-values"></div>
+            </div>
+            <div class="input-group">
+                <label for="binary">Binary (Base 2)</label>
+                <input type="text" id="binary" placeholder="Enter binary number">
+                <div id="binary-places" class="place-values"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const decimalInput = document.getElementById('decimal');
+        const binaryInput = document.getElementById('binary');
+        const decimalPlaces = document.getElementById('decimal-places');
+        const binaryPlaces = document.getElementById('binary-places');
+
+        function updatePlaceValues() {
+            decimalPlaces.innerHTML = '';
+            binaryPlaces.innerHTML = '';
+            
+            const decimalValue = decimalInput.value;
+            const binaryValue = binaryInput.value;
+
+            if (decimalValue) {
+                const decimalDigits = decimalValue.split('').reverse();
+                decimalDigits.forEach((digit, index) => {
+                    const placeValue = document.createElement('div');
+                    placeValue.className = 'place-value';
+                    placeValue.innerHTML = `
+                        ${digit}
+                        <span>10<sup>${index}</sup> = ${Math.pow(10, index)}</span>
+                    `;
+                    decimalPlaces.insertBefore(placeValue, decimalPlaces.firstChild);
+                });
+            }
+
+            if (binaryValue) {
+                const binaryDigits = binaryValue.split('').reverse();
+                binaryDigits.forEach((digit, index) => {
+                    const placeValue = document.createElement('div');
+                    placeValue.className = 'place-value' + (digit === '1' ? ' active' : '');
+                    placeValue.innerHTML = `
+                        ${digit}
+                        <span>2<sup>${index}</sup> = ${Math.pow(2, index)}</span>
+                    `;
+                    binaryPlaces.insertBefore(placeValue, binaryPlaces.firstChild);
+                });
+            }
+        }
+
+        decimalInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (!/^\d*$/.test(value)) {
+                decimalInput.value = value.replace(/[^\d]/g, '');
+                return;
+            }
+            if (value === '') {
+                binaryInput.value = '';
+            } else {
+                const decimal = parseInt(value);
+                binaryInput.value = decimal.toString(2);
+            }
+            updatePlaceValues();
+        });
+
+        binaryInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            if (!/^[01]*$/.test(value)) {
+                binaryInput.value = value.replace(/[^01]/g, '');
+                return;
+            }
+            if (value === '') {
+                decimalInput.value = '';
+            } else {
+                decimalInput.value = parseInt(value, 2).toString();
+            }
+            updatePlaceValues();
+        });
+    </script>
+</body>
+</html>
