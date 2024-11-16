@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Walk Logger</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .log-entry {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        canvas {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Walk Logger</h1>
+    <button onclick="logWalk()">Log Walk</button>
+    <div class="container">
+        <div>
+            <h2>Walk Log</h2>
+            <div id="walkLog"></div>
+        </div>
+        <div>
+            <h2>Walk Graph</h2>
+            <canvas id="walkGraph"></canvas>
+        </div>
+    </div>
+
+    <script>
+        function logWalk() {
+            const walks = JSON.parse(localStorage.getItem('walks') || '[]');
+            walks.push({
+                date: new Date().toISOString(),
+                timestamp: Date.now()
+            });
+            localStorage.setItem('walks', JSON.stringify(walks));
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const walks = JSON.parse(localStorage.getItem('walks') || '[]');
+            
+            updateLog(walks);
+            updateGraph(walks);
+        }
+
+        function updateLog(walks) {
+            const logContainer = document.getElementById('walkLog');
+            logContainer.innerHTML = '';
+            
+            walks.reverse().forEach(walk => {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.textContent = new Date(walk.date).toLocaleString();
+                logContainer.appendChild(entry);
+            });
+        }
+
+        function updateGraph(walks) {
+            const canvas = document.getElementById('walkGraph');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            if (walks.length < 2) return;
+
+            const timestamps = walks.map(w => w.timestamp);
+            const minTime = Math.min(...timestamps);
+            const maxTime = Math.max(...timestamps);
+            const timeRange = maxTime - minTime;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.strokeStyle = '#4CAF50';
+            ctx.lineWidth = 2;
+
+            walks.forEach((walk, index) => {
+                const x = ((walk.timestamp - minTime) / timeRange) * canvas.width;
+                const y = canvas.height - (index / (walks.length - 1)) * canvas.height;
+
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+
+            ctx.stroke();
+        }
+
+        window.onload = updateDisplay;
+        window.onresize = updateDisplay;
+    </script>
+</body>
+</html>
