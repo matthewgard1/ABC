@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word Chain Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 50px;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .word-chain {
+            margin: 20px;
+            font-size: 18px;
+        }
+        .timer {
+            font-size: 24px;
+            margin: 10px;
+        }
+        .score {
+            font-size: 20px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Word Chain Game</h1>
+        <p>Make a new word using the last letter of the previous word</p>
+        <div class="timer">Time: <span id="time">60</span>s</div>
+        <div class="score">Score: <span id="score">0</span></div>
+        <div class="word-chain" id="currentWord">Starting word: APPLE</div>
+        <input type="text" id="userInput" placeholder="Enter your word">
+        <button onclick="checkWord()">Submit</button>
+        <button onclick="newGame()">New Game</button>
+    </div>
+
+    <script>
+        let lastWord = "APPLE";
+        let score = 0;
+        let timer;
+        let timeLeft = 60;
+        let usedWords = new Set(["APPLE"]);
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById("time").textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    alert("Game Over! Your score: " + score);
+                    document.getElementById("userInput").disabled = true;
+                }
+            }, 1000);
+        }
+
+        function checkWord() {
+            let input = document.getElementById("userInput").value.toUpperCase();
+            let lastChar = lastWord[lastWord.length - 1].toUpperCase();
+            
+            if (input.length < 2) {
+                alert("Word must be at least 2 letters long!");
+                return;
+            }
+
+            if (usedWords.has(input)) {
+                alert("Word already used!");
+                return;
+            }
+
+            if (input[0] !== lastChar) {
+                alert("Word must start with the last letter of the previous word!");
+                return;
+            }
+
+            usedWords.add(input);
+            lastWord = input;
+            score += input.length;
+            document.getElementById("score").textContent = score;
+            document.getElementById("currentWord").textContent = "Current word: " + input;
+            document.getElementById("userInput").value = "";
+        }
+
+        function newGame() {
+            lastWord = "APPLE";
+            score = 0;
+            timeLeft = 60;
+            usedWords.clear();
+            usedWords.add("APPLE");
+            document.getElementById("score").textContent = score;
+            document.getElementById("time").textContent = timeLeft;
+            document.getElementById("currentWord").textContent = "Starting word: APPLE";
+            document.getElementById("userInput").value = "";
+            document.getElementById("userInput").disabled = false;
+            clearInterval(timer);
+            startTimer();
+        }
+
+        startTimer();
+    </script>
+</body>
+</html>
