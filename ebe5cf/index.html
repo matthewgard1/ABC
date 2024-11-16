@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Swap Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .recipe-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .recipe-form input, .recipe-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .recipe-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .recipe-form button:hover {
+            background-color: #45a049;
+        }
+
+        .recipes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .recipe-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .recipe-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .recipe-card p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .recipe-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .recipe-actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .like-btn {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .comment-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .comments {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .comment {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Recipe Swap Community</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="recipe-form">
+            <h2>Share Your Recipe</h2>
+            <input type="text" id="recipe-title" placeholder="Recipe Title">
+            <textarea id="recipe-ingredients" placeholder="Ingredients (one per line)"></textarea>
+            <textarea id="recipe-instructions" placeholder="Instructions"></textarea>
+            <button onclick="addRecipe()">Share Recipe</button>
+        </div>
+
+        <div class="recipes-container" id="recipes-container">
+        </div>
+    </div>
+
+    <script>
+        let recipes = [];
+
+        function addRecipe() {
+            const title = document.getElementById('recipe-title').value;
+            const ingredients = document.getElementById('recipe-ingredients').value;
+            const instructions = document.getElementById('recipe-instructions').value;
+
+            if (title && ingredients && instructions) {
+                const recipe = {
+                    id: Date.now(),
+                    title,
+                    ingredients,
+                    instructions,
+                    likes: 0,
+                    comments: []
+                };
+
+                recipes.push(recipe);
+                updateRecipeDisplay();
+                clearForm();
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('recipe-title').value = '';
+            document.getElementById('recipe-ingredients').value = '';
+            document.getElementById('recipe-instructions').value = '';
+        }
+
+        function likeRecipe(id) {
+            const recipe = recipes.find(r => r.id === id);
+            if (recipe) {
+                recipe.likes++;
+                updateRecipeDisplay();
+            }
+        }
+
+        function addComment(id) {
+            const recipe = recipes.find(r => r.id === id);
+            const comment = prompt('Add your comment:');
+            if (recipe && comment) {
+                recipe.comments.push(comment);
+                updateRecipeDisplay();
+            }
+        }
+
+        function updateRecipeDisplay() {
+            const container = document.getElementById('recipes-container');
+            container.innerHTML = '';
+
+            recipes.forEach(recipe => {
+                const recipeCard = document.createElement('div');
+                recipeCard.className = 'recipe-card';
+                recipeCard.innerHTML = `
+                    <h3>${recipe.title}</h3>
+                    <p><strong>Ingredients:</strong><br>${recipe.ingredients}</p>
+                    <p><strong>Instructions:</strong><br>${recipe.instructions}</p>
+                    <div class="recipe-actions">
+                        <button class="like-btn" onclick="likeRecipe(${recipe.id})">
+                            ❤️ ${recipe.likes} Likes
+                        </button>
+                        <button class="comment-btn" onclick="addComment(${recipe.id})">
+                            Add Comment
+                        </button>
+                    </div>
+                    <div class="comments">
+                        <h4>Comments (${recipe.comments.length})</h4>
+                        ${recipe.comments.map(comment => `
+                            <div class="comment">${comment}</div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(recipeCard);
+            });
+        }
+
+        window.onload = () => {
+            const sampleRecipe = {
+                id: Date.now(),
+                title: "Classic Chocolate Chip Cookies",
+                ingredients: "2 1/4 cups flour\n1 cup butter\n3/4 cup sugar\n2 eggs\n2 cups chocolate chips",
+                instructions: "1. Preheat oven to 375°F\n2. Mix ingredients\n3. Bake for 10-12 minutes",
+                likes: 0,
+                comments: ["Looks delicious!", "I'll try this weekend"]
+            };
+            recipes.push(sampleRecipe);
+            updateRecipeDisplay();
+        };
+    </script>
+</body>
+</html>
