@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Programming Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Python Programming Quiz</h1>
+        <form id="quiz-form">
+            <div class="question">
+                <p>1. What is the output of print(2 + 2)?</p>
+                <div class="options">
+                    <input type="radio" name="q1" value="a"> a) "22"<br>
+                    <input type="radio" name="q1" value="b"> b) 4<br>
+                    <input type="radio" name="q1" value="c"> c) 2 + 2<br>
+                    <input type="radio" name="q1" value="d"> d) Error
+                </div>
+            </div>
+
+            <div class="question">
+                <p>2. Which of these is a valid variable name in Python?</p>
+                <div class="options">
+                    <input type="radio" name="q2" value="a"> a) 1variable<br>
+                    <input type="radio" name="q2" value="b"> b) my-variable<br>
+                    <input type="radio" name="q2" value="c"> c) my_variable<br>
+                    <input type="radio" name="q2" value="d"> d) @variable
+                </div>
+            </div>
+
+            <div class="question">
+                <p>3. What is the correct way to create a list in Python?</p>
+                <div class="options">
+                    <input type="radio" name="q3" value="a"> a) list = {1, 2, 3}<br>
+                    <input type="radio" name="q3" value="b"> b) list = [1, 2, 3]<br>
+                    <input type="radio" name="q3" value="c"> c) list = (1, 2, 3)<br>
+                    <input type="radio" name="q3" value="d"> d) list = 1, 2, 3
+                </div>
+            </div>
+
+            <div class="question">
+                <p>4. What does len([1, 2, 3]) return?</p>
+                <div class="options">
+                    <input type="radio" name="q4" value="a"> a) 1<br>
+                    <input type="radio" name="q4" value="b"> b) 2<br>
+                    <input type="radio" name="q4" value="c"> c) 3<br>
+                    <input type="radio" name="q4" value="d"> d) Error
+                </div>
+            </div>
+
+            <div class="question">
+                <p>5. Which operator is used for exponentiation in Python?</p>
+                <div class="options">
+                    <input type="radio" name="q5" value="a"> a) ^<br>
+                    <input type="radio" name="q5" value="b"> b) **<br>
+                    <input type="radio" name="q5" value="c"> c) ^^<br>
+                    <input type="radio" name="q5" value="d"> d) //
+                </div>
+            </div>
+
+            <div class="question">
+                <p>6. What is the result of 'Hello' + 'World'?</p>
+                <div class="options">
+                    <input type="radio" name="q6" value="a"> a) HelloWorld<br>
+                    <input type="radio" name="q6" value="b"> b) Hello World<br>
+                    <input type="radio" name="q6" value="c"> c) Error<br>
+                    <input type="radio" name="q6" value="d"> d) Hello+World
+                </div>
+            </div>
+
+            <div class="question">
+                <p>7. How do you create a comment in Python?</p>
+                <div class="options">
+                    <input type="radio" name="q7" value="a"> a) // Comment<br>
+                    <input type="radio" name="q7" value="b"> b) /* Comment */<br>
+                    <input type="radio" name="q7" value="c"> c) # Comment<br>
+                    <input type="radio" name="q7" value="d"> d) -- Comment
+                </div>
+            </div>
+
+            <div class="question">
+                <p>8. What is the correct way to check if two variables are equal?</p>
+                <div class="options">
+                    <input type="radio" name="q8" value="a"> a) x = y<br>
+                    <input type="radio" name="q8" value="b"> b) x == y<br>
+                    <input type="radio" name="q8" value="c"> c) x === y<br>
+                    <input type="radio" name="q8" value="d"> d) x equals y
+                </div>
+            </div>
+
+            <div class="question">
+                <p>9. What is the output of type(42)?</p>
+                <div class="options">
+                    <input type="radio" name="q9" value="a"> a) integer<br>
+                    <input type="radio" name="q9" value="b"> b) int<br>
+                    <input type="radio" name="q9" value="c"> c) number<br>
+                    <input type="radio" name="q9" value="d"> d) num
+                </div>
+            </div>
+
+            <div class="question">
+                <p>10. Which of these is not a Python data type?</p>
+                <div class="options">
+                    <input type="radio" name="q10" value="a"> a) list<br>
+                    <input type="radio" name="q10" value="b"> b) tuple<br>
+                    <input type="radio" name="q10" value="c"> c) array<br>
+                    <input type="radio" name="q10" value="d"> d) dictionary
+                </div>
+            </div>
+
+            <div class="question">
+                <p>11. What is the result of bool(0)?</p>
+                <div class="options">
+                    <input type="radio" name="q11" value="a"> a) True<br>
+                    <input type="radio" name="q11" value="b"> b) False<br>
+                    <input type="radio" name="q11" value="c"> c) 0<br>
+                    <input type="radio" name="q11" value="d"> d) Error
+                </div>
+            </div>
+
+            <div class="question">
+                <p>12. How do you create a function in Python?</p>
+                <div class="options">
+                    <input type="radio" name="q12" value="a"> a) function myFunction():<br>
+                    <input type="radio" name="q12" value="b"> b) def myFunction():<br>
+                    <input type="radio" name="q12" value="c"> c) create myFunction():<br>
+                    <input type="radio" name="q12" value="d"> d) func myFunction():
+                </div>
+            </div>
+
+            <div class="question">
+                <p>13. What is the correct way to import a module named 'math'?</p>
+                <div class="options">
+                    <input type="radio" name="q13" value="a"> a) import math<br>
+                    <input type="radio" name="q13" value="b"> b) include math<br>
+                    <input type="radio" name="q13" value="c"> c) using math<br>
+                    <input type="radio" name="q13" value="d"> d) require math
+                </div>
+            </div>
+
+            <div class="question">
+                <p>14. What does the range(3) function return?</p>
+                <div class="options">
+                    <input type="radio" name="q14" value="a"> a) [0, 1, 2]<br>
+                    <input type="radio" name="q14" value="b"> b) [1, 2, 3]<br>
+                    <input type="radio" name="q14" value="c"> c) [0, 1, 2, 3]<br>
+                    <input type="radio" name="q14" value="d"> d) [1, 2]
+                </div>
+            </div>
+
+            <div class="question">
+                <p>15. Which method is used to add an element to a list?</p>
+                <div class="options">
+                    <input type="radio" name="q15" value="a"> a) add()<br>
+                    <input type="radio" name="q15" value="b"> b) append()<br>
+                    <input type="radio" name="q15" value="c"> c) insert()<br>
+                    <input type="radio" name="q15" value="d"> d) push()
+                </div>
+            </div>
+
+            <div class="question">
+                <p>16. What is the output of 3 * 'hi'?</p>
+                <div class="options">
+                    <input type="radio" name="q16" value="a"> a) hihihi<br>
+                    <input type="radio" name="q16" value="b"> b) hi hi hi<br>
+                    <input type="radio" name="q16" value="c"> c) Error<br>
+                    <input type="radio" name="q16" value="d"> d) 3hi
+                </div>
+            </div>
+
+            <div class="question">
+                <p>17. What is the correct file extension for Python files?</p>
+                <div class="options">
+                    <input type="radio" name="q17" value="a"> a) .py<br>
+                    <input type="radio" name="q17" value="b"> b) .python<br>
+                    <input type="radio" name="q17" value="c"> c) .pt<br>
+                    <input type="radio" name="q17" value="d"> d) .pyt
+                </div>
+            </div>
+
+            <div class="question">
+                <p>18. Which of these is not a valid comparison operator?</p>
+                <div class="options">
+                    <input type="radio" name="q18" value="a"> a) ><br>
+                    <input type="radio" name="q18" value="b"> b) <=<br>
+                    <input type="radio" name="q18" value="c"> c) =><br>
+                    <input type="radio" name="q18" value="d"> d) !=
+                </div>
+            </div>
+
+            <div class="question">
+                <p>19. What is the result of 7 // 2?</p>
+                <div class="options">
+                    <input type="radio" name="q19" value="a"> a) 3.5<br>
+                    <input type="radio" name="q19" value="b"> b) 3<br>
+                    <input type="radio" name="q19" value="c"> c) 4<br>
+                    <input type="radio" name="q19" value="d"> d) 2
+                </div>
+            </div>
+
+            <div class="question">
+                <p>20. Which keyword is used to define a class in Python?</p>
+                <div class="options">
+                    <input type="radio" name="q20" value="a"> a) class<br>
+                    <input type="radio" name="q20" value="b"> b) define<br>
+                    <input type="radio" name="q20" value="c"> c) struct<br>
+                    <input type="radio" name="q20" value="d"> d) def
+                </div>
+            </div>
+
+            <button type="button" onclick="calculateScore()">Submit Quiz</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const answers = {
+                q1: 'b',
+                q2: 'c',
+                q3: 'b',
+                q4: 'c',
+                q5: 'b',
+                q6: 'a',
+                q7: 'c',
+                q8: 'b',
+                q9: 'b',
+                q10: 'c',
+                q11: 'b',
+                q12: 'b',
+                q13: 'a',
+                q14: 'a',
+                q15: 'b',
+                q16: 'a',
+                q17: 'a',
+                q18: 'c',
+                q19: 'b',
+                q20: 'a'
+            };
+
+            let score = 0;
+            for (let i = 1; i <= 20; i++) {
+                const question = document.querySelector(`input[name="q${i}"]:checked`);
+                if (question && question.value === answers[`q${i}`]) {
+                    score++;
+                }
+            }
+
+            const percentage = (score / 20) * 100;
+            document.getElementById('result').innerHTML = `Your score: ${score}/20 (${percentage}%)`;
+        }
+    </script>
+</body>
+</html>
