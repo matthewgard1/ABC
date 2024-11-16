@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walt Disney Trivia Flashcards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .flashcard-container {
+            width: 600px;
+            height: 300px;
+            perspective: 1000px;
+            margin: 20px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .front {
+            background-color: #ffffff;
+        }
+
+        .back {
+            background-color: #e6f3ff;
+            transform: rotateY(180deg);
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .progress {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Walt Disney Trivia</h1>
+    <div class="flashcard-container">
+        <div class="flashcard">
+            <div class="front"></div>
+            <div class="back"></div>
+        </div>
+    </div>
+    <div class="controls">
+        <button onclick="previousCard()">Previous</button>
+        <button onclick="flipCard()">Flip</button>
+        <button onclick="nextCard()">Next</button>
+    </div>
+    <div class="progress"></div>
+
+    <script>
+        const cards = [
+            { question: "When was Walt Disney born?", answer: "December 5, 1901" },
+            { question: "Where was Walt Disney born?", answer: "Chicago, Illinois" },
+            { question: "What was Walt Disney's first animated character?", answer: "Oswald the Lucky Rabbit" },
+            { question: "In what year was Mickey Mouse created?", answer: "1928" },
+            { question: "What was Walt Disney's first full-length animated feature film?", answer: "Snow White and the Seven Dwarfs (1937)" },
+            { question: "What was Walt Disney's middle name?", answer: "Elias" },
+            { question: "What year did Disneyland open?", answer: "1955" },
+            { question: "What was Walt Disney's first job?", answer: "Newspaper route carrier" },
+            { question: "What branch of service did Walt Disney serve in during WWI?", answer: "Red Cross Ambulance Corps" },
+            { question: "How many Academy Awards did Walt Disney win in his lifetime?", answer: "26 Academy Awards" },
+            { question: "What was the name of Walt Disney's first animation company in Kansas City?", answer: "Laugh-O-Gram Studios" },
+            { question: "When did Walt Disney die?", answer: "December 15, 1966" },
+            { question: "What was Walt Disney's favorite food?", answer: "Chili and beans" },
+            { question: "What was the original name for EPCOT?", answer: "Experimental Prototype Community of Tomorrow" },
+            { question: "What was Walt Disney's first sound cartoon?", answer: "Steamboat Willie" },
+            { question: "How many children did Walt Disney have?", answer: "Two daughters - Diane and Sharon" },
+            { question: "What was Walt Disney's wife's name?", answer: "Lillian Bounds Disney" },
+            { question: "What year did Walt move to Hollywood?", answer: "1923" },
+            { question: "What was Walt Disney's first live-action film?", answer: "Treasure Island (1950)" },
+            { question: "What famous theme park attraction did Walt Disney design last?", answer: "Pirates of the Caribbean" },
+            { question: "What was Walt Disney's favorite train?", answer: "The Carolwood Pacific Railroad" },
+            { question: "What was Walt's brother's name who was his business partner?", answer: "Roy Disney" },
+            { question: "What high school did Walt Disney attend?", answer: "McKinley High School in Chicago" },
+            { question: "What was Walt Disney's first color cartoon?", answer: "Flowers and Trees (1932)" },
+            { question: "What was Walt Disney's favorite character?", answer: "Mickey Mouse" },
+            { question: "What was Walt Disney's first television show?", answer: "Disneyland (1954)" },
+            { question: "What war did Walt Disney serve in?", answer: "World War I" },
+            { question: "What was Walt Disney's first studio in California called?", answer: "Disney Brothers Studio" },
+            { question: "What year did Walt marry Lillian Bounds?", answer: "1925" },
+            { question: "Where is Walt Disney buried?", answer: "Forest Lawn Memorial Park in Glendale, California" }
+        ];
+
+        let currentCard = 0;
+        const flashcard = document.querySelector('.flashcard');
+        const frontSide = document.querySelector('.front');
+        const backSide = document.querySelector('.back');
+        const progress = document.querySelector('.progress');
+
+        function updateCard() {
+            frontSide.textContent = cards[currentCard].question;
+            backSide.textContent = cards[currentCard].answer;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            progress.textContent = `Card ${currentCard + 1} of ${cards.length}`;
+        }
+
+        function flipCard() {
+            flashcard.classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            flashcard.classList.remove('flipped');
+            currentCard = (currentCard + 1) % cards.length;
+            updateCard();
+        }
+
+        function previousCard() {
+            flashcard.classList.remove('flipped');
+            currentCard = (currentCard - 1 + cards.length) % cards.length;
+            updateCard();
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>
