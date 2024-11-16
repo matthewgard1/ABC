@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiplication Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 50px;
+            text-align: center;
+        }
+        .problem {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        input {
+            font-size: 18px;
+            padding: 5px;
+            width: 100px;
+            margin: 10px;
+        }
+        button {
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .feedback {
+            margin-top: 10px;
+            font-size: 16px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Multiplication Practice</h1>
+        <div class="problem" id="problem"></div>
+        <input type="number" id="answer" placeholder="Your answer">
+        <br>
+        <button onclick="checkAnswer()">Submit</button>
+        <button onclick="newProblem()">New Problem</button>
+        <div class="score" id="score">Score: 0/0</div>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script>
+        let num1, num2, correct = 0, total = 0;
+
+        function generateProblem() {
+            num1 = Math.floor(Math.random() * 12) + 1;
+            num2 = Math.floor(Math.random() * 12) + 1;
+            document.getElementById('problem').textContent = `${num1} × ${num2} = ?`;
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').textContent = '';
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            const correctAnswer = num1 * num2;
+            total++;
+
+            if (userAnswer === correctAnswer) {
+                correct++;
+                document.getElementById('feedback').textContent = 'Correct!';
+                document.getElementById('feedback').style.color = 'green';
+            } else {
+                document.getElementById('feedback').textContent = `Incorrect. The answer is ${correctAnswer}`;
+                document.getElementById('feedback').style.color = 'red';
+            }
+
+            document.getElementById('score').textContent = `Score: ${correct}/${total}`;
+        }
+
+        function newProblem() {
+            generateProblem();
+        }
+
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        generateProblem();
+    </script>
+</body>
+</html>
