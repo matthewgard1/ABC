@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background: #1a1a1a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+.game-container {
+    max-width: 800px;
+    text-align: center;
+}
+.scene {
+    margin: 20px 0;
+}
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+button {
+    background: #4a4a4a;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+button:hover {
+    background: #666;
+}
+svg {
+    width: 300px;
+    height: 300px;
+    margin: 20px 0;
+}
+</style>
+</head>
+<body>
+<div class="game-container">
+    <div class="scene">
+        <div id="art"></div>
+        <p id="description"></p>
+        <div id="buttons" class="buttons"></div>
+    </div>
+</div>
+<script>
+const gameData = {
+    start: {
+        description: "You find yourself at the entrance of a mysterious dungeon.",
+        art: `<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#555"/><path d="M40,80 L60,80 L60,40 L40,40 Z" fill="#333"/></svg>`,
+        options: [
+            { text: "Enter the dungeon", next: "entrance" },
+            { text: "Run away", next: "coward" }
+        ]
+    },
+    coward: {
+        description: "You decide to run away. Game Over!",
+        art: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#ff0"/><path d="M40,40 L45,45 M55,40 L50,45" stroke="#000"/><path d="M40,60 Q50,50 60,60" stroke="#000" fill="none"/></svg>`,
+        options: [
+            { text: "Try again", next: "start" }
+        ]
+    },
+    entrance: {
+        description: "The dungeon entrance splits into three paths.",
+        art: `<svg viewBox="0 0 100 100"><path d="M10,50 L90,50 M50,10 L50,90 M50,50 L90,90" stroke="#fff" fill="none"/></svg>`,
+        options: [
+            { text: "Go left", next: "slimeRoom" },
+            { text: "Go straight", next: "treasureRoom" },
+            { text: "Go right", next: "trapRoom" }
+        ]
+    },
+    slimeRoom: {
+        description: "A giant slime blocks your path!",
+        art: `<svg viewBox="0 0 100 100"><path d="M30,70 Q50,20 70,70 Q50,90 30,70" fill="#0f0"/><circle cx="45" cy="50" r="5" fill="#000"/><circle cx="55" cy="50" r="5" fill="#000"/></svg>`,
+        options: [
+            { text: "Fight it", next: "slimeFight" },
+            { text: "Try to sneak past", next: "slimeSneak" }
+        ]
+    },
+    slimeFight: {
+        description: "The slime absorbs you. Game Over!",
+        art: `<svg viewBox="0 0 100 100"><path d="M20,80 Q50,20 80,80 Q50,100 20,80" fill="#0f0"/></svg>`,
+        options: [
+            { text: "Restart", next: "start" }
+        ]
+    },
+    slimeSneak: {
+        description: "You successfully sneak past the slime!",
+        options: [
+            { text: "Continue", next: "darkRoom" },
+            { text: "Go back", next: "entrance" }
+        ]
+    },
+    darkRoom: {
+        description: "You're in a pitch-black room. You hear strange noises.",
+        art: `<svg viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="#000"/><circle cx="50" cy="50" r="2" fill="#fff"/></svg>`,
+        options: [
+            { text: "Light a torch", next: "spiderRoom" },
+            { text: "Continue in darkness", next: "pitfall" }
+        ]
+    },
+    pitfall: {
+        description: "You fall into a deep pit. Game Over!",
+        art: `<svg viewBox="0 0 100 100"><path d="M10,0 L90,0 L50,100 Z" fill="#000"/></svg>`,
+        options: [
+            { text: "Restart", next: "start" }
+        ]
+    },
+    spiderRoom: {
+        description: "Giant spiders descend from the ceiling!",
+        art: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#333"/><path d="M30,50 L10,30 M70,50 L90,30 M30,50 L10,70 M70,50 L90,70" stroke="#333" fill="none"/></svg>`,
+        options: [
+            { text: "Fight", next: "spiderFight" },
+            { text: "Run", next: "entrance" }
+        ]
+    },
+    spiderFight: {
+        description: "You become spider food. Game Over!",
+        options: [
+            { text: "Restart", next: "start" }
+        ]
+    },
+    treasureRoom: {
+        description: "You find a room full of gold!",
+        art: `<svg viewBox="0 0 100 100"><rect x="30" y="40" width="40" height="30" fill="#fd0"/><circle cx="50" cy="40" r="15" fill="#fd0"/></svg>`,
+        options: [
+            { text: "Take the treasure", next: "victory" },
+            { text: "Leave it", next: "entrance" }
+        ]
+    },
+    trapRoom: {
+        description: "The floor is covered in suspicious tiles.",
+        art: `<svg viewBox="0 0 100 100"><rect x="0" y="0" width="100" height="100" fill="#444"/><path d="M0,33 L100,33 M0,66 L100,66 M33,0 L33,100 M66,0 L66,100" stroke="#555" fill="none"/></svg>`,
+        options: [
+            { text: "Step carefully", next: "treasureRoom" },
+            { text: "Run across", next: "trapped" }
+        ]
+    },
+    trapped: {
+        description: "Arrows shoot from the walls. Game Over!",
+        art: `<svg viewBox="0 0 100 100"><path d="M10,50 L90,50 M40,20 L60,50 L40,80" fill="#600"/></svg>`,
+        options: [
+            { text: "Restart", next: "start" }
+        ]
+    },
+    victory: {
+        description: "Congratulations! You've won the treasure and escaped the dungeon!",
+        art: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#fd0"/><path d="M30,50 L45,65 L70,35" stroke="#000" fill="none" stroke-width="5"/></svg>`,
+        options: [
+            { text: "Play again", next: "start" }
+        ]
+    }
+};
+
+let currentRoom = 'start';
+
+function renderRoom(roomId) {
+    const room = gameData[roomId];
+    document.getElementById('description').textContent = room.description;
+    document.getElementById('art').innerHTML = room.art || '';
+    const buttonsDiv = document.getElementById('buttons');
+    buttonsDiv.innerHTML = '';
+    room.options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option.text;
+        button.onclick = () => {
+            currentRoom = option.next;
+            renderRoom(option.next);
+        };
+        buttonsDiv.appendChild(button);
+    });
+}
+
+renderRoom('start');
+</script>
+</body>
+</html>
