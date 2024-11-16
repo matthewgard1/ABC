@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Face Recognition Memory Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            text-align: center;
+            margin: 20px;
+        }
+        .face-card {
+            width: 200px;
+            height: 200px;
+            margin: 10px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+        #name-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .name-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .name-button:hover {
+            background-color: #45a049;
+        }
+        #score {
+            font-size: 20px;
+            margin: 20px;
+        }
+        #timer {
+            font-size: 18px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Face Recognition Memory Game</h1>
+    <div id="timer">Study Time: <span id="countdown">5</span></div>
+    <div id="game-container">
+        <img id="current-face" class="face-card">
+        <div id="name-options"></div>
+    </div>
+    <div id="score">Score: <span id="score-value">0</span></div>
+
+    <script>
+        const faces = [
+            { url: 'https://randomuser.me/api/portraits/men/1.jpg', name: 'John' },
+            { url: 'https://randomuser.me/api/portraits/women/1.jpg', name: 'Sarah' },
+            { url: 'https://randomuser.me/api/portraits/men/2.jpg', name: 'Mike' },
+            { url: 'https://randomuser.me/api/portraits/women/2.jpg', name: 'Emma' },
+            { url: 'https://randomuser.me/api/portraits/men/3.jpg', name: 'David' }
+        ];
+
+        let currentFace;
+        let score = 0;
+        let studyTime = 5;
+        const faceImage = document.getElementById('current-face');
+        const nameOptions = document.getElementById('name-options');
+        const scoreElement = document.getElementById('score-value');
+        const countdownElement = document.getElementById('countdown');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showFace() {
+            nameOptions.innerHTML = '';
+            currentFace = faces[Math.floor(Math.random() * faces.length)];
+            faceImage.src = currentFace.url;
+            
+            const countdown = setInterval(() => {
+                studyTime--;
+                countdownElement.textContent = studyTime;
+                if (studyTime === 0) {
+                    clearInterval(countdown);
+                    faceImage.style.display = 'none';
+                    showOptions();
+                }
+            }, 1000);
+        }
+
+        function showOptions() {
+            const shuffledNames = shuffleArray([...faces]).map(face => face.name);
+            shuffledNames.forEach(name => {
+                const button = document.createElement('button');
+                button.textContent = name;
+                button.className = 'name-button';
+                button.onclick = () => checkAnswer(name);
+                nameOptions.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedName) {
+            if (selectedName === currentFace.name) {
+                score++;
+                scoreElement.textContent = score;
+                alert('Correct!');
+            } else {
+                alert('Wrong! The correct name was ' + currentFace.name);
+            }
+
+            nameOptions.innerHTML = '';
+            faceImage.style.display = 'block';
+            studyTime = 5;
+            countdownElement.textContent = studyTime;
+            showFace();
+        }
+
+        showFace();
+    </script>
+</body>
+</html>
