@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .grid {
+            display: grid;
+            gap: 1px;
+            background-color: #ccc;
+            width: fit-content;
+            margin: 20px 0;
+        }
+        .pixel {
+            width: 20px;
+            height: 20px;
+        }
+        .black {
+            background-color: black;
+        }
+        .white {
+            background-color: white;
+        }
+        #error {
+            color: red;
+        }
+        textarea {
+            width: 300px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="input" placeholder="Enter 1s and 0s (e.g., 1010 1111 0000 1111)"></textarea>
+    <div id="error"></div>
+    <div id="grid" class="grid"></div>
+
+    <script>
+        const input = document.getElementById('input');
+        const grid = document.getElementById('grid');
+        const error = document.getElementById('error');
+
+        input.addEventListener('input', updateGrid);
+
+        function updateGrid() {
+            const text = input.value.replace(/[^01\s]/g, '');
+            const rows = text.trim().split(/\s+/);
+            const size = Math.sqrt(rows.join('').length);
+            
+            error.textContent = '';
+            grid.innerHTML = '';
+
+            if (!Number.isInteger(size)) {
+                error.textContent = 'Input must form a square matrix';
+                return;
+            }
+
+            if (rows.some(row => row.length !== size)) {
+                error.textContent = 'All rows must have equal length';
+                return;
+            }
+
+            grid.style.gridTemplateColumns = `repeat(${size}, 20px)`;
+
+            rows.forEach(row => {
+                [...row].forEach(char => {
+                    const pixel = document.createElement('div');
+                    pixel.className = `pixel ${char === '1' ? 'black' : 'white'}`;
+                    grid.appendChild(pixel);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
