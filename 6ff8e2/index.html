@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .stats {
+            margin: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg width="200" height="200" id="pet">
+            <circle id="body" cx="100" cy="100" r="50" fill="#FFB6C1"/>
+            <circle id="leftEye" cx="80" cy="90" r="5" fill="black"/>
+            <circle id="rightEye" cx="120" cy="90" r="5" fill="black"/>
+            <path id="mouth" d="M80 110 Q100 130 120 110" stroke="black" fill="none"/>
+        </svg>
+        <div class="stats">
+            <div>Happiness: <span id="happiness">100</span></div>
+            <div>Energy: <span id="energy">100</span></div>
+            <div>Hunger: <span id="hunger">100</span></div>
+        </div>
+        <div>
+            <button onclick="feed()">Feed</button>
+            <button onclick="play()">Play</button>
+            <button onclick="sleep()">Sleep</button>
+        </div>
+    </div>
+
+    <script>
+        let state = {
+            happiness: 100,
+            energy: 100,
+            hunger: 100,
+            sleeping: false
+        };
+
+        function updatePet() {
+            const body = document.getElementById('body');
+            const mouth = document.getElementById('mouth');
+            const leftEye = document.getElementById('leftEye');
+            const rightEye = document.getElementById('rightEye');
+
+            if (state.sleeping) {
+                leftEye.setAttribute('d', 'M75 90 L85 90');
+                rightEye.setAttribute('d', 'M115 90 L125 90');
+                mouth.setAttribute('d', 'M90 110 Q100 120 110 110');
+                body.setAttribute('fill', '#D3D3D3');
+            } else {
+                if (state.happiness < 50) {
+                    mouth.setAttribute('d', 'M80 120 Q100 100 120 120');
+                    body.setAttribute('fill', '#FFA07A');
+                } else {
+                    mouth.setAttribute('d', 'M80 110 Q100 130 120 110');
+                    body.setAttribute('fill', '#FFB6C1');
+                }
+            }
+
+            document.getElementById('happiness').textContent = state.happiness;
+            document.getElementById('energy').textContent = state.energy;
+            document.getElementById('hunger').textContent = state.hunger;
+        }
+
+        function feed() {
+            if (!state.sleeping && state.hunger < 100) {
+                state.hunger = Math.min(100, state.hunger + 30);
+                state.happiness = Math.min(100, state.happiness + 10);
+                updatePet();
+            }
+        }
+
+        function play() {
+            if (!state.sleeping && state.energy > 0) {
+                state.happiness = Math.min(100, state.happiness + 20);
+                state.energy = Math.max(0, state.energy - 30);
+                state.hunger = Math.max(0, state.hunger - 20);
+                updatePet();
+            }
+        }
+
+        function sleep() {
+            state.sleeping = !state.sleeping;
+            if (state.sleeping) {
+                state.energy = Math.min(100, state.energy + 50);
+            }
+            updatePet();
+        }
+
+        setInterval(() => {
+            if (!state.sleeping) {
+                state.happiness = Math.max(0, state.happiness - 5);
+                state.energy = Math.max(0, state.energy - 2);
+                state.hunger = Math.max(0, state.hunger - 3);
+                updatePet();
+            }
+        }, 5000);
+
+        updatePet();
+    </script>
+</body>
+</html>
