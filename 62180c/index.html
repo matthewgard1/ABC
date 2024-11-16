@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hangman Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        #hangman {
+            width: 300px;
+            height: 300px;
+            border: 2px solid #333;
+            margin: 20px;
+            background-color: white;
+        }
+        #word-display {
+            font-size: 2em;
+            letter-spacing: 10px;
+            margin: 20px;
+        }
+        #guesses {
+            margin: 20px;
+        }
+        .btn {
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hangman Game</h1>
+    <canvas id="hangman" width="300" height="300"></canvas>
+    <div id="word-display"></div>
+    <div id="guesses"></div>
+    <button class="btn" onclick="newGame()">New Game</button>
+
+    <script>
+        const words = ['JAVASCRIPT', 'HANGMAN', 'GAME', 'PROGRAMMING', 'COMPUTER', 'WEB', 'DEVELOPMENT'];
+        let word = '';
+        let guessedLetters = new Set();
+        let remainingGuesses = 6;
+        let canvas = document.getElementById('hangman');
+        let ctx = canvas.getContext('2d');
+
+        function drawHangman(stage) {
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#333';
+            ctx.beginPath();
+
+            switch(stage) {
+                case 0:
+                    ctx.moveTo(50, 250);
+                    ctx.lineTo(250, 250);
+                    break;
+                case 1:
+                    ctx.moveTo(100, 250);
+                    ctx.lineTo(100, 50);
+                    break;
+                case 2:
+                    ctx.moveTo(100, 50);
+                    ctx.lineTo(200, 50);
+                    break;
+                case 3:
+                    ctx.moveTo(200, 50);
+                    ctx.lineTo(200, 80);
+                    break;
+                case 4:
+                    ctx.arc(200, 100, 20, 0, Math.PI * 2);
+                    break;
+                case 5:
+                    ctx.moveTo(200, 120);
+                    ctx.lineTo(200, 180);
+                    ctx.moveTo(200, 140);
+                    ctx.lineTo(170, 160);
+                    ctx.moveTo(200, 140);
+                    ctx.lineTo(230, 160);
+                    break;
+                case 6:
+                    ctx.moveTo(200, 180);
+                    ctx.lineTo(170, 220);
+                    ctx.moveTo(200, 180);
+                    ctx.lineTo(230, 220);
+                    break;
+            }
+            ctx.stroke();
+        }
+
+        function initializeButtons() {
+            const guessesDiv = document.getElementById('guesses');
+            guessesDiv.innerHTML = '';
+            for (let i = 65; i <= 90; i++) {
+                const button = document.createElement('button');
+                button.textContent = String.fromCharCode(i);
+                button.className = 'btn';
+                button.onclick = () => makeGuess(button.textContent);
+                guessesDiv.appendChild(button);
+            }
+        }
+
+        function updateWordDisplay() {
+            const display
