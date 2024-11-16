@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caesar Cipher Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .pattern-input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .visualization {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        .alphabet-row {
+            display: flex;
+            gap: 10px;
+        }
+        .letter-box {
+            border: 1px solid #ddd;
+            padding: 5px;
+            min-width: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Caesar Cipher Interactive Tool</h1>
+        
+        <div class="input-group">
+            <label>Shift Pattern (comma-separated numbers):</label>
+            <input type="text" id="pattern" class="pattern-input" value="3" placeholder="Enter numbers separated by commas (e.g., 1,2,3)">
+        </div>
+
+        <div class="visualization">
+            <div>
+                <div>Original:</div>
+                <div class="alphabet-row" id="originalAlphabet"></div>
+            </div>
+            <div>
+                <div>Shifted:</div>
+                <div class="alphabet-row" id="shiftedAlphabet"></div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Input Text:</label>
+            <textarea id="input" placeholder="Enter text to encrypt/decrypt"></textarea>
+        </div>
+
+        <button onclick="encrypt()">Encrypt</button>
+        <button onclick="decrypt()">Decrypt</button>
+
+        <div class="input-group">
+            <label>Result:</label>
+            <textarea id="output" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        function updateVisualization() {
+            const pattern = document.getElementById('pattern').value.split(',').map(Number);
+            const shift = pattern[0] || 3;
+            
+            const originalDiv = document.getElementById('originalAlphabet');
+            const shiftedDiv = document.getElementById('shiftedAlphabet');
+            
+            originalDiv.innerHTML = '';
+            shiftedDiv.innerHTML = '';
+
+            for (let i = 0; i < alphabet.length; i++) {
+                const originalBox = document.createElement('div');
+                originalBox.className = 'letter-box';
+                originalBox.textContent = alphabet[i];
+                originalDiv.appendChild(originalBox);
+
+                const shiftedBox = document.createElement('div');
+                shiftedBox.className = 'letter-box';
+                shiftedBox.textContent = alphabet[(i + shift) % 26];
+                shiftedDiv.appendChild(shiftedBox);
+            }
+        }
+
+        function processText(text, pattern, encrypt = true) {
+            pattern = pattern.map(Number);
+            if (pattern.length === 0 || pattern.some(isNaN)) {
+                pattern = [3];
+            }
+
+            let result = '';
+            let patternIndex = 0;
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i].toUpperCase();
+                if (alphabet.includes(char)) {
+                    const shift = encrypt ? pattern[patternIndex] : -pattern[patternIndex];
+                    const currentIndex = alphabet.indexOf(char);
+                    let newIndex = (currentIndex + shift) % 26;
+                    if (newIndex < 0) newIndex += 26;
+                    result += alphabet[newIndex];
+                    patternIndex = (patternIndex + 1) % pattern.length;
+                } else {
+                    result += text[i];
+                }
+            }
+            return result;
+        }
+
+        function encrypt() {
+            const input = document.getElementById('input').value;
+            const pattern = document.getElementById('pattern').value.split(',');
+            const output = processText(input, pattern, true);
+            document.getElementById('output').value = output;
+            updateVisualization();
+        }
+
+        function decrypt() {
+            const input = document.getElementById('input').value;
+            const pattern = document.getElementById('pattern').value.split(',');
+            const output = processText(input, pattern, false);
+            document.getElementById('output').value = output;
+            updateVisualization();
+        }
+
+        document.getElementById('pattern').addEventListener('input', updateVisualization);
+        window.onload = updateVisualization;
+    </script>
+</body>
+</html>
