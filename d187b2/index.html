@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenFlix</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #141414;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            padding: 20px 0;
+            background-color: #0a0a0a;
+            margin-bottom: 20px;
+        }
+        .logo {
+            color: #1db954;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .main-video {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+        }
+        .main-video iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .video-item {
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .video-item:hover {
+            transform: scale(1.05);
+        }
+        .video-item iframe {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+        }
+        .video-title {
+            padding: 10px;
+            background-color: rgba(29, 185, 84, 0.8);
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .selected {
+            border: 3px solid #1db954;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">GreenFlix</div>
+    </div>
+    <div class="main-video" id="mainVideo"></div>
+    <div class="video-grid" id="videoGrid"></div>
+
+    <script>
+        const videos = [
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Rick Astley - Never Gonna Give You Up"
+            },
+            {
+                id: "9bZkp7q19f0",
+                title: "PSY - GANGNAM STYLE"
+            },
+            {
+                id: "JGwWNGJdvx8",
+                title: "Ed Sheeran - Shape of You"
+            },
+            {
+                id: "kJQP7kiw5Fk",
+                title: "Luis Fonsi - Despacito ft. Daddy Yankee"
+            },
+            {
+                id: "OPf0YbXqDm0",
+                title: "Mark Ronson - Uptown Funk ft. Bruno Mars"
+            },
+            {
+                id: "RgKAFK5djSk",
+                title: "Wiz Khalifa - See You Again ft. Charlie Puth"
+            }
+        ];
+
+        function createVideoElement(video, isMain = false) {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${video.id}${isMain ? '?autoplay=1' : '?controls=0'}`;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            return iframe;
+        }
+
+        function selectVideo(video) {
+            const mainVideoDiv = document.getElementById('mainVideo');
+            mainVideoDiv.innerHTML = '';
+            mainVideoDiv.appendChild(createVideoElement(video, true));
+
+            document.querySelectorAll('.video-item').forEach(item => {
+                item.classList.remove('selected');
+                if(item.dataset.videoId === video.id) {
+                    item.classList.add('selected');
+                }
+                const iframe = item.querySelector('iframe');
+                iframe.src = `https://www.youtube.com/embed/${item.dataset.videoId}?controls=0`;
+            });
+        }
+
+        function initializeVideos() {
+            const mainVideoDiv = document.getElementById('mainVideo');
+            const videoGrid = document.getElementById('videoGrid');
+
+            mainVideoDiv.appendChild(createVideoElement(videos[0], true));
+
+            videos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.dataset.videoId = video.id;
+                if(video.id === videos[0].id) videoItem.classList.add('selected');
+
+                videoItem.appendChild(createVideoElement(video));
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'video-title';
+                titleDiv.textContent = video.title;
+                videoItem.appendChild(titleDiv);
+
+                videoItem.addEventListener('click', () => selectVideo(video));
+                videoGrid.appendChild(videoItem);
+            });
+        }
+
+        initializeVideos();
+    </script>
+</body>
+</html>
